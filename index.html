@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #container {
+            width: 700px;
+            height: 800px;
+            background-color: red;
+            position: relative;
+        }
+
+        #dirtyImg {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <img src="./clean.png" id="cleanImg">
+        <img src="./dirty.png" id="dirtyImg">
+    </div>
+    <script>
+        const _dirty = document.getElementById("dirtyImg")
+        const _clean = document.getElementById("cleanImg")
+        var isAct = false;
+
+        function handleMouseEnter() {
+            console.log("1")
+            isAct = true;
+        }
+
+        // 鼠標移動時的處理函數
+        function handleMouseMove(event, Img) {
+            // 獲取鼠標相對於圖片左上角的坐標
+            const x = event.clientX - Img.getBoundingClientRect().left;
+            const y = event.clientY - Img.getBoundingClientRect().top;
+            if (isAct) {
+                // 在這裡你可以使用 x 和 y 的值進行相應的處理
+                console.log(x / Img.width * 100)
+                Img.style.clipPath = `inset(0% 0% 0% ${x / Img.width * 100}%)`
+            }else{
+                console.log(x)
+                _dirty.style.clipPath = `inset(0% 0% 0% ${x / Img.width * 100}%)`
+            }
+
+            // 
+        }
+        function handleMouseLeave() {
+            console.log("2")
+            isAct = false;
+        }
+
+        // 添加鼠標進入事件監聽器
+        _dirty.addEventListener('mouseenter', handleMouseEnter);
+        // 添加鼠標移動事件監聽器(閉包)
+        // 事件監聽器中，應該傳遞的是函數引用，而不是直接執行函數。使用括號 () 將函數執行，意味著它會立即執行，並且返回的值會被傳遞給 addEventListener，而不是函數本身。
+        _dirty.addEventListener('mousemove', (event) => handleMouseMove(event, _dirty));
+        // 添加鼠標離開事件監聽器
+        _dirty.addEventListener('mouseleave', handleMouseLeave);
+        // 
+        // 
+        _clean.addEventListener('mousemove', (event) => handleMouseMove(event, _clean));
+        // 
+        // 
+    </script>
+    <script>
+        // 閉包範例
+        function outerFunction(outerVariable) {
+            // 內部函數
+            function innerFunction(innerVariable) {
+                // 在內部函數中使用外部函數的變量
+                console.log(outerVariable + innerVariable);
+            }
+
+            // 返回內部函數的引用，形成閉包
+            return innerFunction;
+        }
+        // 創建閉包
+        const closure = outerFunction(10);
+        // 調用閉包，仍然能夠訪問 outerVariable
+        closure(5); // 輸出：15
+    </script>
+</body>
+
+</html>
